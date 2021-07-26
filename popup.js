@@ -28,7 +28,7 @@ async function drawSliders() {
   let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-    
+
     chrome.tabs.sendMessage(
       tabs[0].id,
       {
@@ -76,10 +76,18 @@ async function drawSliders() {
 // Functions executed on DOM rather than extention pop-up
 
 function addSliders() {
-  var audios = document.getElementsByTagName('audio');
-  var audios_array = [].slice.call(audios);
+  var audio_elements = document.getElementsByTagName('audio');
+  var video_elements = document.getElementsByTagName('video');
+  var audios_array = [].slice.call(audio_elements);
+  var videos_array = [].slice.call(video_elements);
+  var volume_scalable_array = audios_array.concat(videos_array);
+  for (var i = 0; i < volume_scalable_array.length; i++) {
+    if(volume_scalable_array[i].id.length == 0){
+      volume_scalable_array[i].id = ("volume_scalable_" + i)
+    }
+  }
 
-  let formatted_audio_array = audios_array.map(audio => {
+  let formatted_audio_array = volume_scalable_array.map(audio => {
     console.log("current audio volume: " + audio.volume)
      let rObj = {}
      rObj["element_id"] = audio.id;
